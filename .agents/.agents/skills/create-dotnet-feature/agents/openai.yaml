@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create .NET Feature"
+  short_description: "Build a feature in the detected architecture"
+  default_prompt: "Use $create-dotnet-feature to add a .NET backend feature while preserving the repository architecture."

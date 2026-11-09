@@ -1,0 +1,4 @@
+interface:
+  display_name: "Microservice .NET Standards"
+  short_description: "Strict independent-service topology profile"
+  default_prompt: "Use $microservice-dotnet-standards with the selected code-architecture profile for confirmed microservice work."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create .NET CRUD Feature"
+  short_description: "Add CRUD inside an established .NET module"
+  default_prompt: "Use $create-dotnet-crud-feature to add CRUD inside an established modular-monolith module after confirming its activation gate."

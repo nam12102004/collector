@@ -1,0 +1,54 @@
+name: ${COMPOSE_PROJECT_NAME:-attendance-collector}-keycloak
+
+services:
+  keycloak-db:
+    image: postgres:18.6-alpine3.24
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:?KEYCLOAK_DB_PASSWORD is required}
+    volumes:
+      - keycloak-postgres:/var/lib/postgresql/18/docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:?KEYCLOAK_DB_PASSWORD is required}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?KEYCLOAK_ADMIN_PASSWORD is required}
+      KC_HOSTNAME: http://localhost:${KEYCLOAK_HOST_PORT:-8081}
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      COLLECTOR_LOCAL_ADMIN_SUBJECT: ${BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT:?BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT is required}
+      COLLECTOR_LOCAL_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:?BOOTSTRAP_ADMIN_EMAIL is required}
+      COLLECTOR_LOCAL_ADMIN_PASSWORD: ${KEYCLOAK_COLLECTOR_ADMIN_PASSWORD:?KEYCLOAK_COLLECTOR_ADMIN_PASSWORD is required}
+    ports:
+      - "${EDGE_BIND_ADDRESS:-127.0.0.1}:${KEYCLOAK_HOST_PORT:-8081}:8080"
+    depends_on:
+      keycloak-db: { condition: service_healthy }
+    volumes:
+      - ./deploy/keycloak/attendance-collector-realm.json:/opt/keycloak/data/import/attendance-collector-realm.json:ro
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -ec
+        - "exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.0\\r\\n\\r\\n' >&3; read -r status <&3; [[ \"$$status\" == *'200 OK'* ]]"
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 60s
+    restart: unless-stopped
+
+volumes:
+  keycloak-postgres:

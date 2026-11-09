@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clean .NET Standards"
+  short_description: "Clean Architecture with technical folders"
+  default_prompt: "Use $clean-dotnet-standards with $dotnet-backend-standards to implement a multi-project Clean Architecture backend with the required internal technical-folder layout."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refactor Angular Code"
+  short_description: "Split Angular god components safely with Zod"
+  default_prompt: "Use $refactor-angular-code to split this Angular god component by responsibility, preserve behavior, verify event contracts, and migrate forms to Zod."

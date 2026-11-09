@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Angular Code"
+  short_description: "Review Angular changes against repository standards"
+  default_prompt: "Use $review-angular-code to review these Angular changes for correctness and repository fit."

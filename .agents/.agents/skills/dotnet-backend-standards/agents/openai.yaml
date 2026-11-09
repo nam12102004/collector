@@ -1,0 +1,4 @@
+interface:
+  display_name: ".NET Backend Standards"
+  short_description: "Strict architecture-neutral .NET quality gates"
+  default_prompt: "Use $dotnet-backend-standards to implement or review .NET backend changes against strict architecture-neutral quality gates."

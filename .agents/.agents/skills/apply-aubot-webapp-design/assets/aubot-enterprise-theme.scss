@@ -1,0 +1,255 @@
+/* Aubot Enterprise Theme v2. Apply dark mode with data-theme="dark" on the document root. */
+
+/* 1. Semantic tokens */
+:root {
+  --primary-color: #1e3a8a;
+  --primary-color-hover: #2563eb;
+  --primary-color-active: #1d4ed8;
+  --primary-color-light: #eff6ff;
+  --on-primary-color: #ffffff;
+  --accent-color: #10b981;
+  --accent-color-hover: #059669;
+  --accent-color-light: #ecfdf5;
+  --on-accent-color: #052e2b;
+  --bg-color: #f9fafb;
+  --surface-color: #ffffff;
+  --surface-hover: #f3f4f6;
+  --text-color: #111827;
+  --muted-text-color: #6b7280;
+  --border-color: #e5e7eb;
+  --sidebar-brand-bg: #172554;
+  --success-color: #059669;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+  --info-color: #2563eb;
+  --info-bg: #eff6ff;
+  --info-border: #bfdbfe;
+  --warning-color: #d97706;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  --danger-color: #dc2626;
+  --danger-bg: #fef2f2;
+  --danger-border: #fca5a5;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --primary-color: #1d4ed8;
+  --primary-color-hover: #2563eb;
+  --primary-color-active: #1e40af;
+  --primary-color-light: #172554;
+  --on-primary-color: #ffffff;
+  --accent-color: #34d399;
+  --accent-color-hover: #10b981;
+  --accent-color-light: #064e3b;
+  --on-accent-color: #052e2b;
+  --bg-color: #111827;
+  --surface-color: #1f2937;
+  --surface-hover: #111827;
+  --text-color: #f9fafb;
+  --muted-text-color: #9ca3af;
+  --border-color: #374151;
+  /* --sidebar-brand-bg intentionally not overridden: the brand row stays fixed navy in both themes. */
+  --success-color: #34d399;
+  --success-bg: #064e3b;
+  --success-border: #065f46;
+  --info-color: #60a5fa;
+  --info-bg: #172554;
+  --info-border: #1e3a8a;
+  --warning-color: #f59e0b;
+  --warning-bg: #422006;
+  --warning-border: #92400e;
+  --danger-color: #f87171;
+  --danger-bg: #7f1d1d;
+  --danger-border: #991b1b;
+  color-scheme: dark;
+}
+
+/* 2. Global reset. Skip this block if the target repository already owns an equivalent reset/root layer
+      (e.g. CRM.WebApp keeps this in its own styles.css and loads this file only for tokens + overrides). */
+body {
+  color: var(--text-color);
+  background: var(--bg-color);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--accent-color);
+  transition: color 150ms ease-in-out;
+}
+
+a:hover {
+  color: var(--accent-color-hover);
+}
+
+/* 3. Component library overrides (NG-ZORRO reference; translate selectors for another library) */
+.ant-btn-primary {
+  color: var(--on-primary-color) !important;
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus,
+.ant-btn-primary:active {
+  background: var(--primary-color-hover) !important;
+  border-color: var(--primary-color-hover) !important;
+}
+
+.ant-btn-primary[nzGhost] {
+  background: transparent !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.ant-menu-dark,
+.ant-menu-dark.ant-menu-inline,
+.ant-menu-dark .ant-menu-item,
+.ant-menu-dark .ant-menu-submenu-title,
+.ant-menu-dark .ant-menu-sub,
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+  background: var(--primary-color) !important;
+}
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  color: var(--on-primary-color) !important;
+  background: var(--accent-color) !important;
+}
+
+.ant-menu-item a:hover {
+  color: var(--accent-color) !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-number-focused,
+.ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
+.ant-picker-focused {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgb(30 58 138 / 15%) !important;
+}
+
+.ant-table,
+.ant-card {
+  color: var(--text-color);
+  background: var(--surface-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+.ant-tabs-ink-bar {
+  background: var(--accent-color) !important;
+}
+
+[data-theme='dark'] .ant-layout,
+[data-theme='dark'] .ant-layout-content,
+[data-theme='dark'] .ant-modal-content,
+[data-theme='dark'] .ant-modal-header,
+[data-theme='dark'] .ant-modal-footer,
+[data-theme='dark'] .ant-select-selector,
+[data-theme='dark'] .ant-select-dropdown,
+[data-theme='dark'] .ant-input,
+[data-theme='dark'] .ant-input-affix-wrapper,
+[data-theme='dark'] .ant-input-number,
+[data-theme='dark'] .ant-picker,
+[data-theme='dark'] .ant-table,
+[data-theme='dark'] .ant-table-container,
+[data-theme='dark'] .ant-table-thead > tr > th,
+[data-theme='dark'] .ant-table-tbody > tr > td,
+[data-theme='dark'] .ant-card,
+[data-theme='dark'] .ant-pagination-item,
+[data-theme='dark'] .ant-pagination-item-link,
+[data-theme='dark'] .ant-dropdown-menu,
+[data-theme='dark'] .ant-popover-inner,
+[data-theme='dark'] .ant-message-notice-content,
+[data-theme='dark'] .ant-notification-notice {
+  color: var(--text-color) !important;
+  background: var(--surface-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme='dark'] .ant-input-affix-wrapper .ant-input,
+[data-theme='dark'] .ant-input-number-input {
+  background: transparent !important;
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link) {
+  background: var(--surface-color) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .ant-table-cell-fix-left,
+[data-theme='dark'] .ant-table-cell-fix-right {
+  background: var(--surface-color) !important;
+}
+
+[data-theme='dark'] .ant-empty-description,
+[data-theme='dark'] .ant-tabs-tab,
+[data-theme='dark'] .ant-form-item-label > label,
+[data-theme='dark'] .ant-modal-title,
+[data-theme='dark'] .ant-card-head-title {
+  color: var(--muted-text-color) !important;
+}
+
+[data-theme='dark'] .ant-select-item-option-active,
+[data-theme='dark'] .ant-select-item-option-selected {
+  background: var(--primary-color-light) !important;
+}
+
+[data-theme='dark'] .ant-tabs-tab:hover,
+[data-theme='dark'] .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--accent-color) !important;
+}
+
+/* 4. Portable utility classes. Framework-agnostic; use instead of ad hoc inline styles. */
+.page-title { color: var(--text-color); font-size: 24px; font-weight: 600; line-height: 1.3; margin: 0; }
+.page-subtitle { color: var(--muted-text-color); margin: 4px 0 0; }
+.surface { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+.toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; margin-bottom: 16px; }
+.toolbar-filters { display: flex; flex: 1; flex-wrap: wrap; gap: 8px; }
+.money { font-variant-numeric: tabular-nums; font-weight: 600; }
+.muted { color: var(--muted-text-color); }
+.status-success { background: var(--success-bg); border-color: var(--success-border); color: var(--success-color); }
+.status-info { background: var(--info-bg); border-color: var(--info-border); color: var(--info-color); }
+.status-warning { background: var(--warning-bg); border-color: var(--warning-border); color: var(--warning-color); }
+.status-danger { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-color); }
+
+/* Public auth canvas: sign-in gateway, login, callback, forbidden, session-expired screens. */
+.public-auth-page { align-items: center; background: var(--bg-color); display: flex; justify-content: center; min-height: 100vh; padding: 24px; }
+.public-auth-panel { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; display: grid; gap: 24px; padding: 32px; width: min(100%, 440px); }
+.public-auth-logo { height: auto; max-width: 70%; width: 144px; }
+.public-auth-header { display: grid; gap: 8px; }
+.public-auth-product { color: var(--muted-text-color); font-size: 14px; line-height: 1.5; margin: 0; }
+.public-auth-title { color: var(--text-color); font-size: 28px; font-weight: 600; line-height: 1.25; margin: 0; }
+.public-auth-copy { color: var(--muted-text-color); line-height: 1.6; margin: 0; }
+.public-auth-action { justify-self: start; min-width: 136px; }
+
+/* 5. Responsive adjustments proven at the KPI/CRM breakpoints. Adapt to the target library's nearest breakpoints. */
+@media (max-width: 767px) {
+  .page-title { font-size: 21px; }
+  .toolbar, .toolbar-filters { align-items: stretch; flex-direction: column; }
+  .toolbar button, .toolbar .ant-select, .toolbar input { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .public-auth-page { padding: 16px; }
+  .public-auth-panel { padding: 24px; }
+  .public-auth-title { font-size: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

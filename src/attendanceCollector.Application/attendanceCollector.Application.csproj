@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\attendanceCollector.Domain\attendanceCollector.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Share the wire contract without referencing the simulator web application. -->
+    <Compile Include="..\attendanceCollector.MockDevice\Contracts\*.cs" Link="Contracts\MockDevice\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

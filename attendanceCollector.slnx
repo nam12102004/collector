@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Folder Name="/src/attendanceCollector.WebApp/" />
+    <Project Path="src/attendanceCollector.API/attendanceCollector.API.csproj" />
+    <Project Path="src/attendanceCollector.Application/attendanceCollector.Application.csproj" />
+    <Project Path="src/attendanceCollector.Domain/attendanceCollector.Domain.csproj" />
+    <Project Path="src/attendanceCollector.Infrastructure/attendanceCollector.Infrastructure.csproj" />
+    <Project Path="src/attendanceCollector.MockDevice/attendanceCollector.MockDevice.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/attendanceCollector.ArchitectureTests/attendanceCollector.ArchitectureTests.csproj" />
+    <Project Path="tests/attendanceCollector.IntegrationTests/attendanceCollector.IntegrationTests.csproj" />
+    <Project Path="tests/attendanceCollector.UnitTests/attendanceCollector.UnitTests.csproj" />
+  </Folder>
+</Solution>

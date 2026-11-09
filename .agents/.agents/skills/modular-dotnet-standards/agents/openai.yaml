@@ -1,0 +1,4 @@
+interface:
+  display_name: "Modular .NET Standards"
+  short_description: "Strict gated modular-monolith architecture rules"
+  default_prompt: "Use $modular-dotnet-standards for work inside an established .NET modular monolith after confirming its activation gate."

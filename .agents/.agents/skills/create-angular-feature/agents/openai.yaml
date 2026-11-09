@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Angular Feature"
+  short_description: "Build structured Angular features with Zod"
+  default_prompt: "Use $create-angular-feature to build this verified Angular feature with smart-page boundaries, focused components, exact outputs, and Zod validation."

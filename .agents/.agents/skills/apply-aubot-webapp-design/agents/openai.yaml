@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aubot WebApp Design"
+  short_description: "Apply the Aubot enterprise WebApp design"
+  default_prompt: "Use $apply-aubot-webapp-design to adapt this app to the Aubot enterprise design."

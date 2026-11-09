@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create .NET Module"
+  short_description: "Add an explicitly requested bounded-context module"
+  default_prompt: "Use $create-dotnet-module to add an explicitly requested bounded-context module to an established .NET modular monolith."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployment Config Standards"
+  short_description: "Strict production-safe deployment config gates"
+  default_prompt: "Use $deployment-config-standards to verify and edit the full environment-to-deployment configuration path safely."

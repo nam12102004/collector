@@ -1,0 +1,43 @@
+name: attendance-collector-production
+
+services:
+  api:
+    image: ${IMAGE_REGISTRY:?Set IMAGE_REGISTRY}/attendance-collector-api:${IMAGE_TAG:?Set IMAGE_TAG}
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 8080
+      Database__ApplyMigrationsOnStartup: "false"
+      CollectorIntegration__Enabled: ${COLLECTOR_INTEGRATION_ENABLED:-false}
+      CollectorIntegration__KeyRingPath: /var/lib/collector/keys
+      CollectorIntegration__KeyEncryptionCertificatePath: ${COLLECTOR_TOKEN_CERTIFICATE_PATH:-}
+      CollectorIntegration__KeyEncryptionCertificatePassword: ${COLLECTOR_TOKEN_CERTIFICATE_PASSWORD:-}
+      CollectorIntegration__TrustedProxyAddresses__0: ${COLLECTOR_TRUSTED_PROXY_IP:-}
+      AllowedHosts: ${ALLOWED_HOSTS:?Set ALLOWED_HOSTS}
+      ConnectionStrings__Default: Host=${DB_HOST:?Set DB_HOST};Port=${DB_PORT:?Set DB_PORT};Database=${DB_NAME:?Set DB_NAME};Username=${DB_USER:?Set DB_USER};Password=${DB_PASSWORD:?Set DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=false
+      OIDC_ISSUER: ${OIDC_ISSUER:?Set OIDC_ISSUER}
+      OIDC_METADATA_ADDRESS: ${OIDC_METADATA_ADDRESS:?Set OIDC_METADATA_ADDRESS}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:?Set OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      OIDC_REDIRECT_URI: ${OIDC_REDIRECT_URI:?Set OIDC_REDIRECT_URI}
+      OIDC_POST_LOGOUT_REDIRECT_URI: ${OIDC_POST_LOGOUT_REDIRECT_URI:?Set OIDC_POST_LOGOUT_REDIRECT_URI}
+      OIDC_SCOPES: ${OIDC_SCOPES:-openid profile email}
+      OIDC_AUDIENCE: ${OIDC_AUDIENCE:?Set OIDC_AUDIENCE}
+      OIDC_VALIDATE_AUDIENCE: ${OIDC_VALIDATE_AUDIENCE:?Set OIDC_VALIDATE_AUDIENCE}
+      OIDC_REQUIRE_HTTPS_METADATA: "true"
+      BOOTSTRAP_ENABLED: ${BOOTSTRAP_ENABLED:-}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:?Set BOOTSTRAP_ADMIN_EMAIL}
+      BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT: ${BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT:?Set BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
+      OTEL_EXPORTER_OTLP_HEADERS: ${OTEL_EXPORTER_OTLP_HEADERS:-}
+      OTEL_SERVICE_NAME: attendanceCollector-api
+      OTEL_SERVICE_VERSION: ${OTEL_SERVICE_VERSION:?Set OTEL_SERVICE_VERSION}
+    ports:
+      - "${EDGE_BIND_ADDRESS:?Set EDGE_BIND_ADDRESS}:${PRODUCTION_APP_PORT:?Set PRODUCTION_APP_PORT}:8080"
+    volumes:
+      - collector-keyring:/var/lib/collector/keys
+    restart: unless-stopped
+
+volumes:
+  collector-keyring:
+

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create .NET Angular Project"
+  short_description: "Scaffold a confirmed .NET and Angular solution"
+  default_prompt: "Use $create-dotnet-angular-project to scaffold a confirmed full-stack solution."

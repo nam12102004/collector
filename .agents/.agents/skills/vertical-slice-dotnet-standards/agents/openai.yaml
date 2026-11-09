@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vertical Slice .NET Standards"
+  short_description: "Strict large-app CQRS slice profile"
+  default_prompt: "Use $vertical-slice-dotnet-standards with $dotnet-backend-standards only for a confirmed large CQRS or vertical-slice application."

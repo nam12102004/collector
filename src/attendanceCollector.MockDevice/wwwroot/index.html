@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MockDevice | Thiết bị chấm công</title>
+  <style>
+    :root{font-family:Inter,"Segoe UI",sans-serif;color:#17212b;background:#f3f6fa;font-synthesis:none}*{box-sizing:border-box}body{margin:0}.top{background:#102b46;color:white;padding:28px max(24px,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#a8c6e0}.top h1{font-size:26px;margin:7px 0 0}.badge{border:1px solid #3a678e;border-radius:999px;padding:8px 13px;color:#cce6f8;font-size:13px;white-space:nowrap}.wrap{max-width:1120px;margin:26px auto;padding:0 20px}.grid{display:grid;grid-template-columns:350px 1fr;gap:20px}.card{background:white;border:1px solid #e1e8ef;border-radius:14px;padding:22px;box-shadow:0 4px 18px #1a34440a}.card h2{font-size:18px;margin:0 0 8px}.muted{color:#647789;font-size:14px;line-height:1.55;margin:0 0 18px}.address{background:#edf6fc;border:1px solid #cfe3f2;border-radius:10px;padding:14px;margin:14px 0 18px}.label{font-size:12px;color:#60798d;text-transform:uppercase;letter-spacing:.06em}.endpoint{font:600 16px ui-monospace,Consolas,monospace;margin-top:7px;overflow-wrap:anywhere}.fields{display:grid;grid-template-columns:1fr 110px;gap:10px}label{font-size:13px;color:#405363;display:block;margin-bottom:6px}input{width:100%;border:1px solid #ccd7e1;border-radius:8px;padding:10px;font:inherit;background:#f9fbfc;color:#243744}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}button{border:0;border-radius:8px;padding:10px 14px;font:600 14px inherit;cursor:pointer;background:#1266a5;color:#fff}button.secondary{background:#e8eef4;color:#2e465a}button:disabled{opacity:.6;cursor:wait}.notice{margin-top:14px;min-height:21px;font-size:14px;color:#1266a5}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid #edf1f4;white-space:nowrap}th{font-weight:600;color:#65798a}.empty{text-align:center;color:#728494;padding:42px 10px}.stats{display:flex;gap:12px;margin-top:14px}.stat{background:#f5f8fa;padding:11px 13px;border-radius:9px;color:#5b7181;font-size:13px}.stat strong{color:#18384f;font-size:17px;margin-right:5px}@media(max-width:800px){.grid{grid-template-columns:1fr}.top{padding:22px 20px;align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header class="top"><div><div class="brand">Attendance Lab</div><h1>MockDevice</h1></div><div class="badge">● Thiết bị mô phỏng đang chạy</div></header>
+  <main class="wrap">
+    <div class="grid">
+      <section class="card">
+        <h2>Kết nối tới thiết bị</h2>
+        <p class="muted">Nhập địa chỉ này trong Collector. Collector sẽ kết nối qua HTTP và đọc các lượt chấm công đã lưu trong database của MockDevice.</p>
+        <div class="address"><div class="label">IP / host và port cho Collector</div><div class="endpoint" id="endpoint">Đang tải…</div></div>
+        <div class="fields">
+          <div><label for="host">IP / host</label><input id="host" readonly></div>
+          <div><label for="port">Port</label><input id="port" readonly></div>
+        </div>
+        <p class="muted" style="margin:10px 0 0">Driver trong Collector: <strong>MockDevice HTTP</strong>. Hai dịch vụ dùng chung Docker network, nên Collector kết nối qua tên service <code>mock-device</code> và cổng nội bộ <code>8080</code>. Giao diện này mở từ máy của bạn tại cổng 4300.</p>
+        <div class="buttons"><button id="generate">Tạo dữ liệu chấm công mẫu</button><button id="refresh" class="secondary">Làm mới danh sách</button></div>
+        <div class="notice" id="notice" role="status"></div>
+      </section>
+      <section class="card">
+        <h2>Dữ liệu trong database</h2><p class="muted">Các bản ghi bên dưới được Collector đọc trực tiếp khi bạn chọn máy và bấm “Thu thập dữ liệu”.</p>
+        <div class="stats"><div class="stat"><strong id="count">0</strong>bản ghi</div><div class="stat">Database riêng: <strong>mockDevice</strong></div></div>
+        <div class="table-wrap" style="margin-top:15px"><table><thead><tr><th>Thời gian máy</th><th>Mã nhân viên</th><th>Tên</th><th>Status</th><th>Punch</th><th>UID</th></tr></thead><tbody id="rows"><tr><td class="empty" colspan="6">Đang tải…</td></tr></tbody></table></div>
+      </section>
+    </div>
+  </main>
+<script>
+const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function loadConfig(){try{const c=await fetch('/api/v1/mock-device/config').then(r=>r.json());$('host').value=c.collectorHost;$('port').value=c.port;$('endpoint').textContent=`${c.collectorHost}:${c.port}`}catch{$('endpoint').textContent='Không đọc được cấu hình'}}
+async function loadEvents(){const r=await fetch('/api/v1/mock-device/events?page=1&pageSize=100');if(!r.ok)throw Error('Không tải được dữ liệu');const p=await r.json();$('count').textContent=p.totalCount;$('rows').innerHTML=p.items.length?p.items.map(x=>`<tr><td>${esc(x.deviceLocalTime.replace('T',' '))}</td><td>${esc(x.employeeCode)}</td><td>${esc(x.employeeName)}</td><td>${x.status}</td><td>${x.punch}</td><td>${esc(x.sourceRecordUid??'')}</td></tr>`).join(''):'<tr><td class="empty" colspan="6">Chưa có dữ liệu. Bấm “Tạo dữ liệu chấm công mẫu”.</td></tr>'}
+$('refresh').onclick=()=>loadEvents().catch(e=>$('notice').textContent=e.message);$('generate').onclick=async()=>{const b=$('generate');b.disabled=true;try{const r=await fetch('/api/v1/mock-device/generate',{method:'POST'});if(!r.ok)throw Error('Không tạo được dữ liệu');const x=await r.json();$('notice').textContent=`Đã thêm ${x.recordsAdded} lượt chấm công mới.`;await loadEvents()}catch(e){$('notice').textContent=e.message}finally{b.disabled=false}};
+Promise.all([loadConfig(),loadEvents()]).catch(e=>$('notice').textContent=e.message);
+</script>
+</body>
+</html>

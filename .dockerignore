@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/node_modules/
+src/attendanceCollector.WebApp/dist/
+.git/
+.vs/
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example

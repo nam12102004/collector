@@ -1,0 +1,51 @@
+name: ${MOCK_DEVICE_COMPOSE_PROJECT_NAME:-attendance-mock-device}
+
+services:
+  mock-device:
+    build:
+      context: .
+      dockerfile: src/attendanceCollector.MockDevice/Dockerfile
+    image: attendance-collector-mock-device:${MOCK_DEVICE_IMAGE_TAG:-local}
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__MockDevice: Host=mock-device-db;Port=5432;Database=${MOCK_DEVICE_DB_NAME:-mockDevice};Username=${MOCK_DEVICE_DB_USER:-mockDevice};Password=${MOCK_DEVICE_DB_PASSWORD:?Set MOCK_DEVICE_DB_PASSWORD}
+      MOCK_DEVICE_COLLECTOR_URL: ${MOCK_DEVICE_COLLECTOR_URL:-http://api:8080/}
+      MOCK_DEVICE_INGESTION_API_KEY: ${MOCK_DEVICE_INGESTION_API_KEY:?Set MOCK_DEVICE_INGESTION_API_KEY}
+      MOCK_DEVICE_CONNECT_HOST: ${MOCK_DEVICE_CONNECT_HOST:-mock-device}
+      MOCK_DEVICE_CONNECT_PORT: 8080
+    networks:
+      - attendance
+    ports:
+      - "${EDGE_BIND_ADDRESS:-127.0.0.1}:${MOCK_DEVICE_PORT:-4300}:8080"
+    depends_on:
+      mock-device-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mock-device-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${MOCK_DEVICE_DB_NAME:-mockDevice}
+      POSTGRES_USER: ${MOCK_DEVICE_DB_USER:-mockDevice}
+      POSTGRES_PASSWORD: ${MOCK_DEVICE_DB_PASSWORD:?Set MOCK_DEVICE_DB_PASSWORD}
+    volumes:
+      - mock-device-data:/var/lib/postgresql/data
+      - ./src/attendanceCollector.MockDevice/sql/001_schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    networks:
+      - attendance
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  mock-device-data:
+    name: ${MOCK_DEVICE_DB_VOLUME:-attendance-mock-device-data}
+
+networks:
+  attendance:
+    external: true
+    name: ${ATTENDANCE_NETWORK_NAME:-attendance-collector-network}

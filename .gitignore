@@ -1,0 +1,26 @@
+# Build outputs
+**/bin/
+**/obj/
+**/node_modules/
+src/attendanceCollector.WebApp/dist/
+.vs/
+.idea/
+.vscode/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Keep local and deployment environment files out of Git. Only the safe template is tracked.
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+.collector-keys/
+*.pfx
+
+# Test results
+TestResults/
+coverage/

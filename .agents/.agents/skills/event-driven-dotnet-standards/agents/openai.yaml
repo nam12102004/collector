@@ -1,0 +1,4 @@
+interface:
+  display_name: "Event-Driven .NET Standards"
+  short_description: "Strict durable event-driven profile"
+  default_prompt: "Use $event-driven-dotnet-standards with $dotnet-backend-standards for confirmed cross-process messaging and event-driven workflows."

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#14243d" />
+    <title>Attendance Collector</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Attendance Collector trang chủ">
+        <span class="brand-mark">AC</span>
+        <span><strong>Attendance Collector</strong><small>Quản lý máy chấm công</small></span>
+      </a>
+      <div id="auth-actions" class="auth-actions"></div>
+    </header>
+    <main class="page">
+      <div id="message" class="notice hidden" role="status" aria-live="polite"></div>
+      <section id="signed-out" class="public-auth-panel hidden" aria-labelledby="login-title">
+        <div class="public-auth-mark" aria-hidden="true">AC</div>
+        <div class="public-auth-header">
+          <p class="public-auth-product">Attendance Collector</p>
+          <h1 id="login-title" class="public-auth-title">Đăng nhập để tiếp tục</h1>
+          <p class="public-auth-copy">Đăng nhập bằng tài khoản Keycloak được cấp quyền quản trị để quản lý máy và xem dữ liệu chấm công.</p>
+        </div>
+        <a class="button public-auth-action" href="/auth/login?returnUrl=%2F">Đăng nhập qua Keycloak</a>
+      </section>
+      <section id="denied" class="public-auth-panel hidden" aria-labelledby="denied-title">
+        <div class="public-auth-mark" aria-hidden="true">AC</div>
+        <div class="public-auth-header">
+          <p class="public-auth-product">Attendance Collector</p>
+          <h1 id="denied-title" class="public-auth-title">Tài khoản chưa được cấp quyền quản trị</h1>
+          <p class="public-auth-copy">Hãy liên hệ quản trị viên để kiểm tra tài khoản Keycloak đang sử dụng.</p>
+        </div>
+      </section>
+      <div id="admin" class="hidden">
+        <section class="page-heading">
+          <div><div class="eyebrow">Bảng điều khiển</div><h1>Chấm công</h1><p>Quản lý nguồn dữ liệu, chạy đồng bộ và theo dõi log từ máy.</p></div>
+          <span class="live-indicator">● Hệ thống sẵn sàng</span>
+        </section>
+        <section class="panel">
+          <div class="section-heading"><div><div class="eyebrow">Cấu hình nguồn</div><h2>Thêm máy chấm công</h2><p>Chọn MockDevice HTTP để Collector kết nối tới dịch vụ MockDevice qua IP/port (mặc định mock-device:8080), hoặc chọn ZK-compatible TCP cho máy MockMWS thật (mặc định port 4370).</p></div></div>
+          <form id="source-form" class="form-grid">
+            <div class="field"><label for="src-name">Tên máy</label><input id="src-name" required maxlength="120" placeholder="MockMWS local" /></div>
+            <div class="field"><label for="src-driver">Loại máy</label><select id="src-driver" required></select></div>
+            <div class="field"><label for="src-host">IP máy</label><input id="src-host" required value="mock-device" placeholder="mock-device" /></div>
+            <div class="field"><label for="src-port">Port</label><input id="src-port" type="number" min="1" max="65535" value="8080" required /></div>
+            <div class="form-actions"><button type="submit">Lưu máy</button></div>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="section-heading section-heading-row"><div><div class="eyebrow">Thiết bị</div><h2>Máy đã đăng ký</h2><p>Chỉ máy đang hoạt động mới có thể chạy lấy dữ liệu.</p></div><button class="button button-muted" id="refresh-sources" type="button">Tải lại</button></div>
+          <div class="collect-bar"><div class="field"><label for="selected-source">Chọn máy để lấy dữ liệu</label><select id="selected-source"></select><small id="collect-hint">Nguồn mockDevice gửi dữ liệu từ dịch vụ chạy riêng.</small></div><button id="collect" type="button">Lấy dữ liệu</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Mã máy</th><th>Tên máy</th><th>Phương thức</th><th>Địa chỉ</th><th>Múi giờ</th><th>Trạng thái</th><th></th></tr></thead><tbody id="sources-body"></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="section-heading section-heading-row"><div><div class="eyebrow">Dữ liệu nhận về</div><h2>Log chấm công</h2><p>Thời gian hiển thị theo UTC; dùng bộ lọc để tìm bản ghi.</p></div><button class="button button-muted" id="refresh-logs" type="button">Làm mới</button></div>
+          <div class="filter-grid">
+            <div class="field"><label for="filter-source">Máy</label><select id="filter-source"><option value="">Tất cả máy</option></select></div>
+            <div class="field"><label for="filter-employee">Mã nhân viên</label><input id="filter-employee" placeholder="Tìm mã nhân viên" /></div>
+            <div class="field"><label for="filter-from">Từ ngày (UTC)</label><input id="filter-from" type="date" /></div>
+            <div class="field"><label for="filter-to">Đến ngày (UTC)</label><input id="filter-to" type="date" /></div>
+            <button id="apply-filter" type="button">Lọc log</button>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Thời gian UTC</th><th>Máy</th><th>Mã nhân viên</th><th>Tên</th><th>Status</th><th>Punch</th><th>Record UID</th></tr></thead><tbody id="logs-body"></tbody></table></div>
+          <div class="pagination"><span id="log-count" class="muted"></span><button class="button button-muted" id="prev-page" type="button">Trước</button><span id="page-label" class="muted"></span><button class="button button-muted" id="next-page" type="button">Sau</button></div>
+        </section>
+        <section class="panel">
+          <div class="section-heading section-heading-row"><div><div class="eyebrow">Theo dõi đồng bộ</div><h2>Lịch sử lấy dữ liệu</h2><p>Kết quả kết nối, số bản ghi nhận được, bản ghi mới và lỗi.</p></div><button class="button button-muted" id="refresh-runs" type="button">Làm mới</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Bắt đầu UTC</th><th>Máy</th><th>Kết quả</th><th>Nhận</th><th>Mới</th><th>Thông tin lỗi</th></tr></thead><tbody id="runs-body"></tbody></table></div>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

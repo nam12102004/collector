@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Modular Code"
+  short_description: "Review proven modular-monolith boundaries"
+  default_prompt: "Use $review-modular-code to review changes in a proven .NET modular monolith against its boundary rules."

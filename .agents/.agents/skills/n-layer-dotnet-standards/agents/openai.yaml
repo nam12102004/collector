@@ -1,0 +1,4 @@
+interface:
+  display_name: "N-Layer .NET Standards"
+  short_description: "Strict single-project N-Layer profile"
+  default_prompt: "Use $n-layer-dotnet-standards with $dotnet-backend-standards to implement or review a confirmed single-project N-Layer backend."

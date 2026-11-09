@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review .NET Code"
+  short_description: "Review .NET changes with architecture-aware gates"
+  default_prompt: "Use $review-dotnet-code to review .NET backend changes against repository evidence and strict quality gates."

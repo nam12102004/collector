@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Calendar Standards"
+  short_description: "NG-ZORRO calendar UX and engineering rules"
+  default_prompt: "Use $frontend-calendar-standards to implement this Angular NG-ZORRO calendar with correct date semantics, responsive event cells, and verified interactions."

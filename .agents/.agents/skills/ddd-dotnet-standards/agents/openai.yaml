@@ -1,0 +1,4 @@
+interface:
+  display_name: "DDD .NET Standards"
+  short_description: "Strict evidence-gated DDD profile"
+  default_prompt: "Use $ddd-dotnet-standards only when domain complexity proves DDD modeling is warranted."

@@ -1,0 +1,61 @@
+{
+  "realm": "attendance-collector",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "loginWithEmailAllowed": true,
+  "clients": [
+    {
+      "clientId": "attendance-collector-webapp",
+      "name": "Attendance Collector local browser",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:4210/auth/callback"],
+      "webOrigins": ["http://localhost:4210"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:4210/signout-callback-oidc"
+      },
+      "defaultClientScopes": ["basic", "web-origins", "profile", "email"],
+      "optionalClientScopes": ["offline_access"],
+      "protocolMappers": [
+        {
+          "name": "attendanceCollector-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "attendanceCollector-api",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "${COLLECTOR_LOCAL_ADMIN_SUBJECT}",
+      "username": "collector-admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "${COLLECTOR_LOCAL_ADMIN_EMAIL}",
+      "firstName": "Collector",
+      "lastName": "Local Admin",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${COLLECTOR_LOCAL_ADMIN_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Angular Frontend Standards"
+  short_description: "Angular boundaries, validation, and UI standards"
+  default_prompt: "Use $angular-frontend-standards to implement this Angular UI with focused components, exact event contracts, and the repository's installed design system and validation patterns."

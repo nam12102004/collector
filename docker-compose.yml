@@ -1,0 +1,92 @@
+name: ${COMPOSE_PROJECT_NAME:-attendance-collector}
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${IMAGE_REGISTRY:-local}/${COMPOSE_PROJECT_NAME:-attendance-collector}:${IMAGE_TAG:-local}
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_HTTP_PORTS: 8080
+      CollectorIntegration__Enabled: ${COLLECTOR_INTEGRATION_ENABLED:-false}
+      CollectorIntegration__AllowDevelopmentHttp: ${COLLECTOR_ALLOW_DEVELOPMENT_HTTP:-false}
+      CollectorIntegration__KeyRingPath: /var/lib/collector/keys
+      AllowedHosts: "${ALLOWED_HOSTS:-*}"
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=${DB_NAME:-attendanceCollector};Username=${DB_USER:-attendanceCollector};Password=${DB_PASSWORD:-local-dev-only}
+      OIDC_ISSUER: ${OIDC_ISSUER:-http://localhost:8080/realms/aubot}
+      OIDC_METADATA_ADDRESS: ${OIDC_METADATA_ADDRESS:-http://host.docker.internal:8080/realms/aubot/.well-known/openid-configuration}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-hrm-webapp}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      OIDC_REDIRECT_URI: ${OIDC_REDIRECT_URI:-http://localhost:4210/auth/callback}
+      OIDC_POST_LOGOUT_REDIRECT_URI: ${OIDC_POST_LOGOUT_REDIRECT_URI:-http://localhost:4210/login}
+      OIDC_SCOPES: ${OIDC_SCOPES:-openid profile email}
+      OIDC_AUDIENCE: ${OIDC_AUDIENCE:-hrm-api}
+      OIDC_VALIDATE_AUDIENCE: ${OIDC_VALIDATE_AUDIENCE:-true}
+      OIDC_REQUIRE_HTTPS_METADATA: ${OIDC_REQUIRE_HTTPS_METADATA:-false}
+      BOOTSTRAP_ENABLED: ${BOOTSTRAP_ENABLED:-}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-admin@aubot.local}
+      BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT: ${BOOTSTRAP_ADMIN_EXTERNAL_SUBJECT:-7b978450-848e-4b7f-830c-c8feb5fe9db2}
+      MOCK_DEVICE_INGESTION_API_KEY: ${MOCK_DEVICE_INGESTION_API_KEY:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
+      OTEL_EXPORTER_OTLP_HEADERS: ${OTEL_EXPORTER_OTLP_HEADERS:-}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-attendanceCollector-api}
+      OTEL_SERVICE_VERSION: ${OTEL_SERVICE_VERSION:-local}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - collector-keyring:/var/lib/collector/keys
+    networks:
+      - attendance
+    ports:
+      - "${EDGE_BIND_ADDRESS:-127.0.0.1}:${LOCAL_APP_PORT:-4210}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-attendanceCollector}
+      POSTGRES_USER: ${DB_USER:-attendanceCollector}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-local-dev-only}
+    ports:
+      - "${EDGE_BIND_ADDRESS:-127.0.0.1}:${LOCAL_DB_PORT:-5433}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - attendance
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:9
+    profiles: [local-tools]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@aubot.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-local-dev-only}
+    ports:
+      - "${EDGE_BIND_ADDRESS:-127.0.0.1}:${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - attendance
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  collector-keyring:
+
+networks:
+  attendance:
+    name: ${ATTENDANCE_NETWORK_NAME:-attendance-collector-network}
+
+
+
