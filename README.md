@@ -6,6 +6,8 @@
 
 The HRM integration lists granted devices without returning host/port, triggers a manual collection, checks connectivity, and reads stored logs through a dedicated API key and per-device grants. The integration is disabled by default outside the local setup. See the [setup and rotation runbook](docs/collector-integration-runbook.md), [OpenAPI contract](docs/collector-api.openapi.yaml), and [implementation plan](docs/collector-server-implementation-plan.md).
 
+For summarized local, staging, and production commands, see [deploy and operations](docs/deployment.md). For device network and data-flow details, see [attendance devices](docs/attendance-devices.md).
+
 ## Local setup
 
 The ignored `.env` file contains disposable local defaults. Start PostgreSQL and the API with:
